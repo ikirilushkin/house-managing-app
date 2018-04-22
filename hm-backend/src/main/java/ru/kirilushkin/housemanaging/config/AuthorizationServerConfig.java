@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import ru.kirilushkin.housemanaging.service.ApplicationClientService;
 
 @Configuration
 @EnableAuthorizationServer
@@ -18,24 +17,26 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     private final AuthenticationManager authenticationManager;
 
-    private final ApplicationClientService applicationClientService;
-
     private final TokenStore tokenStore;
 
-    public AuthorizationServerConfig(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, ApplicationClientService applicationClientService, TokenStore tokenStore) {
+    public AuthorizationServerConfig(PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenStore tokenStore) {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.applicationClientService = applicationClientService;
         this.tokenStore = tokenStore;
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(applicationClientService);
+        clients
+                .inMemory()
+                .withClient("client").secret(passwordEncoder.encode("secret"))
+                .authorizedGrantTypes("password", "authorization_code", "refresh_token").scopes("read", "write")
+                .accessTokenValiditySeconds(60)
+                .refreshTokenValiditySeconds(36000);
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .tokenStore(tokenStore);
     }

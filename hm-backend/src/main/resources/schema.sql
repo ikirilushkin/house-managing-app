@@ -1,14 +1,3 @@
-CREATE TABLE company (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  name TEXT NOT NULL,
-  tags TEXT
-);
-
-CREATE TABLE building (
-  id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  address TEXT NOT NULL
-);
-
 drop table if exists oauth_client_token;
 create table oauth_client_token (
   token_id VARCHAR(256),

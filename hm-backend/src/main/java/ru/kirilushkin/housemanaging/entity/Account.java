@@ -2,6 +2,7 @@ package ru.kirilushkin.housemanaging.entity;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.security.core.GrantedAuthority;
 import ru.kirilushkin.housemanaging.deserializer.AccountDeserializer;
+import ru.kirilushkin.housemanaging.serialiser.AuthoritiesSerializer;
 import ru.kirilushkin.housemanaging.view.View;
 
 import javax.persistence.*;
@@ -42,8 +44,8 @@ public class Account implements Serializable {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @JsonView(View.FullAccountView.class)
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "granted authorities")
+    @JsonSerialize(using = AuthoritiesSerializer.class)
     private Collection<GrantedAuthority> authorities;
 
     @ApiModelProperty(value = "user first name", allowEmptyValue = true)
