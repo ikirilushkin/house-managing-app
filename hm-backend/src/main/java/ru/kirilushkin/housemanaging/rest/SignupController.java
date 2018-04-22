@@ -1,10 +1,7 @@
 package ru.kirilushkin.housemanaging.rest;
 
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.kirilushkin.housemanaging.dto.RegistrationInfo;
 import ru.kirilushkin.housemanaging.service.SignupService;
 
@@ -22,7 +19,7 @@ public class SignupController {
 
     @PostMapping
     @ApiOperation("Sign up new user")
-    public void signup(@RequestBody @Valid RegistrationInfo registrationInfo) {
-        signupService.signup(registrationInfo);
+    public void signup(@RequestBody @Valid RegistrationInfo registrationInfo, @RequestParam(required = false) String type) {
+        signupService.signup(registrationInfo, type);
     }
 }
